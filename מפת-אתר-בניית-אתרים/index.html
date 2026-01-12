@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>מפת אתר בניית אתרים</title>
+    <meta name="description" content="מפת אתר בניית אתרים">
+    <meta name="keywords" content="">
+    
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '76adb0ef-c17e-44c5-8e09-c3cb16361aea',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/styles.css">
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+</head>
+<body>
+<html lang="\&quot;he-IL\&quot;" dir="\&quot;rtl\&quot;"><head>
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+/* Zappy Attribution Header Styles */
+.zappy-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0px 4px 19px 0px rgba(0,0,0,0.04);
+  padding: 16px 10px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 21px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 21px;
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
+
+    .zappy-header p {
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: baseline;
+      margin-bottom: 0 !important;
+      direction: ltr !important;
+    }
+
+.zappy-header .zappy-link {
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.zappy-header .zappy-link:hover {
+  opacity: 0.7;
+}</style>
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+</head><body>
+
+<!-- Zappy Attribution Header -->
+<div id="zappy-attribution-header" class="zappy-header" style="display: none;">
+  <p>Happily created by&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" class="zappy-link">Zappy</a></p>
+</div>```json
+{
+  "html": "\n\n\n    <meta charset="\&quot;UTF-8\&quot;">\n    <meta name="\&quot;viewport\&quot;" content="\&quot;width=device-width," initial-scale="1.0\&quot;">\n    <meta name="\&quot;description\&quot;" content="\&quot;מפת" אתר="" מלאה="" של="" חגי="" שאול="" -="" בניית="" אתרים.="" גלה="" את="" כל="" העמודים,="" הפוסטים,="" תיק="" העבודות="" והשירותים="" שלנו="" במקום="" אחד.\"="">\n    <meta name="\&quot;robots\&quot;" content="\&quot;index," follow\"="">\n    <title>מפת אתר בניית אתרים | חגי שאול - בניית אתרים</title>\n    <link rel="\&quot;canonical\&quot;" href="\&quot;https://hagai-shaul.com/מפת-אתר-בניית-אתרים/\&quot;">\n    <style>\n        :root {\n            --primary-color: #00c8aa;\n            --dark-color: #333333;\n            --black-color: #000000;\n            --navy-color: #2a3e60;\n            --charcoal-color: #3f444b;\n            --gray-color: #33373d;\n            --white-color: #ffffff;\n            --light-bg: #f8f9fa;\n            --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);\n            --shadow-md: 0 4px 20px rgba(0,0,0,0.1);\n            --shadow-lg: 0 8px 30px rgba(0,0,0,0.15);\n            --transition: all 0.3s ease;\n        }\n\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n            line-height: 1.7;\n            color: var(--dark-color);\n            background-color: var(--white-color);\n            overflow-x: hidden;\n        }\n\n        a {\n            text-decoration: none;\n            color: inherit;\n            transition: var(--transition);\n        }\n\n        .skip-link {\n            position: absolute;\n            top: -40px;\n            right: 0;\n            background: var(--primary-color);\n            color: white;\n            padding: 8px 16px;\n            z-index: 100;\n            border-radius: 0 0 0 4px;\n        }\n\n        .skip-link:focus {\n            top: 0;\n        }\n\n        /* Header & Navigation */\n        .site-header {\n            background: var(--white-color);\n            box-shadow: var(--shadow-sm);\n            position: sticky;\n            top: 0;\n            z-index: 1000;\n            transition: var(--transition);\n        }\n\n        .header-container {\n            max-width: 1400px;\n            margin: 0 auto;\n            padding: 0 20px;\n            display: flex;\n            justify-content: space-between;\n            align-items: center;\n            min-height: 80px;\n        }\n\n        .logo {\n            font-size: 1.5rem;\n            font-weight: 700;\n            color: var(--primary-color);\n            transition: var(--transition);\n        }\n\n        .logo:hover {\n            transform: scale(1.05);\n        }\n\n        .main-nav {\n            display: flex;\n            align-items: center;\n        }\n\n        .nav-menu {\n            display: flex;\n            list-style: none;\n            gap: 5px;\n            align-items: center;\n        }\n\n        .nav-item {\n            position: relative;\n        }\n\n        .nav-link {\n            display: block;\n            padding: 10px 18px;\n            color: var(--dark-color);\n            font-weight: 500;\n            border-radius: 8px;\n            transition: var(--transition);\n            white-space: nowrap;\n        }\n\n        .nav-link:hover,\n        .nav-link.active {\n            background: linear-gradient(135deg, var(--primary-color), #00a88e);\n            color: var(--white-color);\n            transform: translateY(-2px);\n        }\n\n        .nav-item.has-submenu > .nav-link::after {\n            content: '▼';\n            font-size: 0.7em;\n            margin-right: 5px;\n            transition: var(--transition);\n        }\n\n        .submenu {\n            position: absolute;\n            top: 100%;\n            right: 0;\n            background: var(--white-color);\n            box-shadow: var(--shadow-md);\n            border-radius: 12px;\n            min-width: 250px;\n            opacity: 0;\n            visibility: hidden;\n            transform: translateY(-10px);\n            transition: var(--transition);\n            list-style: none;\n            padding: 10px 0;\n            margin-top: 5px;\n        }\n\n        .nav-item.has-submenu:hover .submenu {\n            opacity: 1;\n            visibility: visible;\n            transform: translateY(0);\n        }\n\n        .submenu .nav-link {\n            padding: 12px 20px;\n            border-radius: 0;\n        }\n\n        .submenu .nav-link:hover {\n            background: var(--light-bg);\n            color: var(--primary-color);\n            transform: translateX(-5px);\n        }\n\n        .mobile-menu-toggle {\n            display: none;\n            background: none;\n            border: none;\n            font-size: 1.8rem;\n            color: var(--dark-color);\n            cursor: pointer;\n            padding: 5px;\n            z-index: 1001;\n        }\n\n        /* Hero Section */\n        .hero-section {\n            background: linear-gradient(135deg, var(--navy-color) 0%, var(--charcoal-color) 100%);\n            padding: 100px 20px 80px;\n            text-align: center;\n            position: relative;\n            overflow: hidden;\n        }\n\n        .hero-section::before {\n            content: '';\n            position: absolute;\n            top: 0;\n            right: 0;\n            width: 100%;\n            height: 100%;\n            background: url('data:image/svg+xml,<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"2\" fill=\"rgba(0,200,170,0.1)\"/></svg>');\n            opacity: 0.3;\n        }\n\n        .hero-content {\n            max-width: 900px;\n            margin: 0 auto;\n            position: relative;\n            z-index: 1;\n            animation: fadeInUp 0.8s ease;\n        }\n\n        .hero-section h1 {\n            font-size: 3.5rem;\n            color: var(--white-color);\n            margin-bottom: 20px;\n            font-weight: 800;\n            line-height: 1.2;\n        }\n\n        .hero-section p {\n            font-size: 1.3rem;\n            color: rgba(255,255,255,0.9);\n            margin-bottom: 30px;\n        }\n\n        /* Main Content */\n        .main-content {\n            max-width: 1400px;\n            margin: 0 auto;\n            padding: 80px 20px;\n        }\n\n        .sitemap-section {\n            margin-bottom: 60px;\n            animation: fadeInUp 0.8s ease;\n            animation-fill-mode: both;\n        }\n\n        .sitemap-section:nth-child(1) { animation-delay: 0.1s; }\n        .sitemap-section:nth-child(2) { animation-delay: 0.2s; }\n        .sitemap-section:nth-child(3) { animation-delay: 0.3s; }\n        .sitemap-section:nth-child(4) { animation-delay: 0.4s; }\n        .sitemap-section:nth-child(5) { animation-delay: 0.5s; }\n        .sitemap-section:nth-child(6) { animation-delay: 0.6s; }\n        .sitemap-section:nth-child(7) { animation-delay: 0.7s; }\n\n        .section-header {\n            background: linear-gradient(135deg, var(--primary-color), #00a88e);\n            color: var(--white-color);\n            padding: 25px 35px;\n            border-radius: 16px 16px 0 0;\n            margin-bottom: 0;\n        }\n\n        .section-header h2 {\n            font-size: 2rem;\n            font-weight: 700;\n            display: flex;\n            align-items: center;\n            gap: 15px;\n        }\n\n        .section-header h2::before {\n            content: '📑';\n            font-size: 2rem;\n        }\n\n        .sitemap-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));\n            gap: 20px;\n            background: var(--white-color);\n            padding: 35px;\n            border-radius: 0 0 16px 16px;\n            box-shadow: var(--shadow-md);\n        }\n\n        .sitemap-card {\n            background: var(--light-bg);\n            padding: 20px;\n            border-radius: 12px;\n            border-right: 4px solid var(--primary-color);\n            transition: var(--transition);\n            display: flex;\n            flex-direction: column;\n            gap: 8px;\n        }\n\n        .sitemap-card:hover {\n            transform: translateY(-5px);\n            box-shadow: var(--shadow-md);\n            border-right-color: var(--navy-color);\n        }\n\n        .sitemap-card-title {\n            font-size: 1.1rem;\n            font-weight: 600;\n            color: var(--navy-color);\n            transition: var(--transition);\n        }\n\n        .sitemap-card:hover .sitemap-card-title {\n            color: var(--primary-color);\n        }\n\n        .sitemap-card-date {\n            font-size: 0.9rem;\n            color: var(--gray-color);\n            display: flex;\n            align-items: center;\n            gap: 5px;\n        }\n\n        .sitemap-card-date::before {\n            content: '📅';\n        }\n\n        /* Tags Section */\n        .tags-grid {\n            display: flex;\n            flex-wrap: wrap;\n            gap: 12px;\n            background: var(--white-color);\n            padding: 35px;\n            border-radius: 0 0 16px 16px;\n            box-shadow: var(--shadow-md);\n        }\n\n        .tag-item {\n            background: var(--light-bg);\n            padding: 10px 20px;\n            border-radius: 25px;\n            font-size: 0.95rem;\n            color: var(--dark-color);\n            border: 2px solid transparent;\n            transition: var(--transition);\n            display: inline-block;\n        }\n\n        .tag-item:hover {\n            background: var(--primary-color);\n            color: var(--white-color);\n            transform: translateY(-3px);\n            box-shadow: var(--shadow-sm);\n        }\n\n        /* CTA Section */\n        .cta-section {\n            background: linear-gradient(135deg, var(--primary-color), #00a88e);\n            padding: 80px 20px;\n            text-align: center;\n            margin-top: 80px;\n            border-radius: 20px;\n            position: relative;\n            overflow: hidden;\n        }\n\n        .cta-section::before {\n            content: '';\n            position: absolute;\n            top: -50%;\n            left: -50%;\n            width: 200%;\n            height: 200%;\n            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);\n            background-size: 50px 50px;\n            animation: moveBackground 20s linear infinite;\n        }\n\n        .cta-content {\n            max-width: 800px;\n            margin: 0 auto;\n            position: relative;\n            z-index: 1;\n        }\n\n        .cta-section h2 {\n            font-size: 2.5rem;\n            color: var(--white-color);\n            margin-bottom: 20px;\n            font-weight: 700;\n        }\n\n        .cta-section p {\n            font-size: 1.2rem;\n            color: rgba(255,255,255,0.95);\n            margin-bottom: 30px;\n        }\n\n        .cta-button {\n            display: inline-block;\n            background: var(--white-color);\n            color: var(--primary-color);\n            padding: 18px 45px;\n            border-radius: 50px;\n            font-size: 1.1rem;\n            font-weight: 700;\n            transition: var(--transition);\n            box-shadow: var(--shadow-md);\n        }\n\n        .cta-button:hover {\n            transform: translateY(-3px) scale(1.05);\n            box-shadow: var(--shadow-lg);\n            background: var(--navy-color);\n            color: var(--white-color);\n        }\n\n        /* Footer */\n        .site-footer {\n            background: var(--navy-color);\n            color: var(--white-color);\n            padding: 60px 20px 30px;\n            margin-top: 80px;\n        }\n\n        .footer-content {\n            max-width: 1400px;\n            margin: 0 auto;\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n            gap: 40px;\n            margin-bottom: 40px;\n        }\n\n        .footer-section h3 {\n            color: var(--primary-color);\n            margin-bottom: 20px;\n            font-size: 1.3rem;\n        }\n\n        .footer-section ul {\n            list-style: none;\n        }\n\n        .footer-section ul li {\n            margin-bottom: 10px;\n        }\n\n        .footer-section a {\n            color: rgba(255,255,255,0.8);\n            transition: var(--transition);\n        }\n\n        .footer-section a:hover {\n            color: var(--primary-color);\n            padding-right: 5px;\n        }\n\n        .footer-bottom {\n            text-align: center;\n            padding-top: 30px;\n            border-top: 1px solid rgba(255,255,255,0.1);\n            color: rgba(255,255,255,0.7);\n        }\n\n        /* Animations */\n        @keyframes fadeInUp {\n            from {\n                opacity: 0;\n                transform: translateY(30px);\n            }\n            to {\n                opacity: 1;\n                transform: translateY(0);\n            }\n        }\n\n        @keyframes moveBackground {\n            0% {\n                transform: translate(0, 0);\n            }\n            100% {\n                transform: translate(50px, 50px);\n            }\n        }\n\n        /* Responsive Design */\n        @media (max-width: 1024px) {\n            .nav-menu {\n                gap: 2px;\n            }\n\n            .nav-link {\n                padding: 10px 12px;\n                font-size: 0.95rem;\n            }\n\n            .hero-section h1 {\n                font-size: 2.5rem;\n            }\n        }\n\n        @media (max-width: 768px) {\n            .mobile-menu-toggle {\n                display: block;\n            }\n\n            .main-nav {\n                position: fixed;\n                top: 0;\n                right: -100%;\n                width: 80%;\n                max-width: 400px;\n                height: 100vh;\n                background: var(--white-color);\n                box-shadow: var(--shadow-lg);\n                transition: var(--transition);\n                overflow-y: auto;\n                padding-top: 80px;\n            }\n\n            .main-nav.active {\n                right: 0;\n            }\n\n            .nav-menu {\n                flex-direction: column;\n                gap: 0;\n                width: 100%;\n            }\n\n            .nav-item {\n                width: 100%;\n                border-bottom: 1px solid var(--light-bg);\n            }\n\n            .nav-link {\n                padding: 18px 25px;\n                border-radius: 0;\n            }\n\n            .submenu {\n                position: static;\n                opacity: 1;\n                visibility: visible;\n                transform: none;\n                box-shadow: none;\n                background: var(--light-bg);\n                border-radius: 0;\n                max-height: 0;\n                overflow: hidden;\n                transition: max-height 0.3s ease;\n                margin: 0;\n            }\n\n            .nav-item.has-submenu.active .submenu {\n                max-height: 1000px;\n            }\n\n            .nav-item.has-submenu > .nav-link {\n                display: flex;\n                justify-content: space-between;\n                align-items: center;\n            }\n\n            .submenu .nav-link:hover {\n                transform: none;\n                padding-right: 35px;\n            }\n\n            .hero-section {\n                padding: 60px 20px 50px;\n            }\n\n            .hero-section h1 {\n                font-size: 2rem;\n            }\n\n            .hero-section p {\n                font-size: 1.1rem;\n            }\n\n            .main-content {\n                padding: 50px 20px;\n            }\n\n            .sitemap-grid {\n                grid-template-columns: 1fr;\n                padding: 20px;\n            }\n\n            .tags-grid {\n                padding: 20px;\n            }\n\n            .section-header h2 {\n                font-size: 1.5rem;\n            }\n\n            .cta-section {\n                padding: 50px 20px;\n                margin-top: 50px;\n            }\n\n            .cta-section h2 {\n                font-size: 1.8rem;\n            }\n\n            .footer-content {\n                grid-template-columns: 1fr;\n                gap: 30px;\n            }\n        }\n\n        @media (max-width: 480px) {\n            .hero-section h1 {\n                font-size: 1.6rem;\n            }\n\n            .section-header {\n                padding: 20px;\n            }\n\n            .section-header h2 {\n                font-size: 1.3rem;\n            }\n        }\n    </style>\n\n\n    <a href="\&quot;#main-content\&quot;" class="\&quot;skip-link\&quot;">דלג לתוכן הראשי</a>\n\n    <header class="\&quot;site-header\&quot;">\n        <div class="\&quot;header-container\&quot;">\n            <a href="\&quot;/\&quot;" class="\&quot;logo\&quot;" aria-label="\&quot;חזרה" לדף="" הבית\"="">חגי שאול - בניית אתרים</a>\n            \n            <button class="\&quot;mobile-menu-toggle\&quot;" aria-label="\&quot;תפריט" ניווט\"="" aria-expanded="\&quot;false\&quot;">\n                ☰\n            </button>\n\n            <nav class="\&quot;main-nav\&quot;" role="\&quot;navigation\&quot;" aria-label="\&quot;תפריט" ניווט="" ראשי\"="">\n                <ul class="\&quot;nav-menu\&quot;">\n                    <li class="\&quot;nav-item" has-submenu\"="">\n                        <a href="\&quot;/בונה-אתרים/\&quot;" class="\&quot;nav-link\&quot;">בונה אתרים</a>\n                        <ul class="\&quot;submenu\&quot;">\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בונה-אתרים/\&quot;" class="\&quot;nav-link\&quot;">בונה אתרים</a></li>\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-אתר-לעסק/\&quot;" class="\&quot;nav-link\&quot;">בניית אתר לעסק</a></li>\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-חנות-אינטרנטית/\&quot;" class="\&quot;nav-link\&quot;">בניית חנות אינטרנטית</a></li>\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-אתרי-תדמית/\&quot;" class="\&quot;nav-link\&quot;">בניית אתרי תדמית</a></li>\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-מיניסייט/\&quot;" class="\&quot;nav-link\&quot;">בניית מיניסייט</a></li>\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-כרטיס-ביקור-דיגיטלי/\&quot;" class="\&quot;nav-link\&quot;">בניית כרטיס ביקור דיגיטלי</a></li>\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-דף-נחיתה/\&quot;" class="\&quot;nav-link\&quot;">בניית דף נחיתה</a></li>\n                        </ul>\n                    </li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-חנות-אינטרנטית/\&quot;" class="\&quot;nav-link\&quot;">בניית חנות אינטרנטית</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-אתרי-תדמית/\&quot;" class="\&quot;nav-link\&quot;">בניית אתרי תדמית</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-מיניסייט/\&quot;" class="\&quot;nav-link\&quot;">בניית מיניסייט</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-כרטיס-ביקור-דיגיטלי/\&quot;" class="\&quot;nav-link\&quot;">בניית כרטיס ביקור דיגיטלי</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-דף-נחיתה/\&quot;" class="\&quot;nav-link\&quot;">בניית דף נחיתה</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בניית-אתרים-תיק-עבודות/\&quot;" class="\&quot;nav-link\&quot;">תיק עבודות</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/testimonials/\&quot;" class="\&quot;nav-link\&quot;">לקוחות ממליצים</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בונה-אתרים-מומלץ/\&quot;" class="\&quot;nav-link\&quot;">בונה אתרים מומלץ</a></li>\n                    <li class="\&quot;nav-item" has-submenu\"="">\n                        <a href="\&quot;/אודות/\&quot;" class="\&quot;nav-link\&quot;">אודות</a>\n                        <ul class="\&quot;submenu\&quot;">\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/testimonials/\&quot;" class="\&quot;nav-link\&quot;">לקוחות ממליצים</a></li>\n                            <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בונה-אתרים-מומלץ/\&quot;" class="\&quot;nav-link\&quot;">בונה אתרים מומלץ</a></li>\n                        </ul>\n                    </li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/בלוג/\&quot;" class="\&quot;nav-link\&quot;">בלוג</a></li>\n                    <li class="\&quot;nav-item\&quot;"><a href="\&quot;/יצירת-קשר/\&quot;" class="\&quot;nav-link\&quot;">יצירת קשר</a></li>\n                </ul>\n            </nav>\n        </div>\n    </header>\n\n    <section class="\&quot;hero-section\&quot;">\n        <div class="\&quot;hero-content\&quot;">\n            <h1>מפת אתר בניית אתרים</h1>\n            <p>כל התוכן שלנו במקום אחד - עמודים, פוסטים, תיק עבודות ועוד</p>\n        </div>\n    </section>\n\n    <main id="\&quot;main-content\&quot;" class="\&quot;main-content\&quot;" role="\&quot;main\&quot;">\n        \n        <section class="\&quot;sitemap-section\&quot;">\n            <div class="\&quot;section-header\&quot;">\n                <h2>פוסטים</h2>\n            </div>\n            <div class="\&quot;sitemap-grid\&quot;">\n                <a href="\&quot;/איך-לבחור-בונה-אתרים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">איך לבחור בונה אתרים?</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">25/04/2024</div>\n                </a>\n            </div>\n        </section>\n\n        <section class="\&quot;sitemap-section\&quot;">\n            <div class="\&quot;section-header\&quot;">\n                <h2>עמודים</h2>\n            </div>\n            <div class="\&quot;sitemap-grid\&quot;">\n                <a href="\&quot;/תודה/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">תודה</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">09/07/2025</div>\n                </a>\n                <a href="\&quot;/lp-campaign1/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">lp-campaign1</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">09/07/2025</div>\n                </a>\n                <a href="\&quot;/בניית-חנויות-אינטרנט/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית חנויות אינטרנט</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">22/02/2025</div>\n                </a>\n                <a href="\&quot;/צילום-תדמית/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">צילום תדמית</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">22/01/2025</div>\n                </a>\n                <a href="\&quot;/בניית-אתרים-וורדפרס/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתרים וורדפרס</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">12/08/2024</div>\n                </a>\n                <a href="\&quot;/accessibility/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">הצהרת נגישות</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">09/07/2024</div>\n                </a>\n                <a href="\&quot;/בניית-אתר-לעסקים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתר לעסקים</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">08/06/2024</div>\n                </a>\n                <a href="\&quot;/מפת-אתר-בניית-אתרים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">מפת אתר בניית אתרים</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">30/04/2024</div>\n                </a>\n                <a href="\&quot;/בניית-אתר-לעסק/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתר לעסק</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">14/04/2024</div>\n                </a>\n                <a href="\&quot;/בניית-אתרי-תדמית/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתרי תדמית</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">23/03/2024</div>\n                </a>\n                <a href="\&quot;/בניית-אתרים-תיק-עבודות/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתרים תיק עבודות</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">23/03/2024</div>\n                </a>\n                <a href="\&quot;/בלוג/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בלוג</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">23/03/2024</div>\n                </a>\n                <a href="\&quot;/בונה-אתרים-מומלץ/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בונה אתרים מומלץ</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">23/03/2024</div>\n                </a>\n                <a href="\&quot;/בונה-אתרים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בונה אתרים</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">22/03/2024</div>\n                </a>\n                <a href="\&quot;/בניית-אתרים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתרים</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">22/03/2024</div>\n                </a>\n                <a href="\&quot;/hagai-shaul/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">hagai shaul</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">05/04/2022</div>\n                </a>\n            </div>\n        </section>\n\n        <section class="\&quot;sitemap-section\&quot;">\n            <div class="\&quot;section-header\&quot;">\n                <h2>testimonials</h2>\n            </div>\n            <div class="\&quot;sitemap-grid\&quot;">\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Barak Chayun - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">26/11/2023</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Ronen Fridman - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Yossi Margi - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Yoni Nezer - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Yoni Bacalu - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Yasmin Tibon - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Shoham Levy - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Shenhav Avdar - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Shay Ohaion - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Shahar Hayoun - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Shahar Arbel - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Ruth Bezergnov - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Rami Caspi - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Orly Mager - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Ohad Muskam - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Nimrod Ben Zion - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Mika Ron 1 - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Matan Shaked - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Lital Hyuon - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Itsik Efrati - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Itai Ben David - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Ido Havilio - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Galit Shaked - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Gad Mergi - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Avishag Danino - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Alon Nagar - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Almog Yhichye Levy - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Gili Coral - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Yael Gan - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Ofir Glazer - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n                <div class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Smadar Eitan - heb</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">29/10/2022</div>\n                </div>\n            </div>\n        </section>\n\n        <section class="\&quot;sitemap-section\&quot;">\n            <div class="\&quot;section-header\&quot;">\n                <h2>בניית אתרים תיק עבודות</h2>\n            </div>\n            <div class="\&quot;sitemap-grid\&quot;">\n                <a href="\&quot;/בניית-אתר-up24ai/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתר UP24AI</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">26/07/2025</div>\n                </a>\n                <a href="\&quot;/אבי-דגן-אדריכל-ומעצב-פנים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">אבי דגן אדריכל ומעצב פנים</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">12/11/2024</div>\n                </a>\n                <a href="\&quot;/הגיל-השלישי/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">הגיל השלישי</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/תרגומור/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">תרגומור - Targum&amp;more</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/מורשת-מרן-שופס/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">מורשת מרן שופס</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/רק-בריאות/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">רק בריאות</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/רגלי/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">רגלי</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/פסיכוגריאטר-דר-מאיר-בראל/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">פסיכוגריאטר ד\"ר מאיר בראל</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/דרכון-פורטוגלי/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">דרכון פורטוגלי</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/plannie-app/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Plannie App</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/בניית-אתר-קורל-מוזיקה/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בניית אתר קורל מוזיקה</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/leap-gaming/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Leap Gaming</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/hyp/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">HYP</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/groh-systems/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Groh Systems</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/get-kassi/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Get Kassi</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/גד-מרגי/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">גד מרגי</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/איזיקאונט/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">איזיקאונט</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">21/04/2024</div>\n                </a>\n                <a href="\&quot;/biotic-labs/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">Biotic Labs</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n                <a href="\&quot;/בר-אור-פרסום/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">בר אור פרסום</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n                <a href="\&quot;/אריה-צלמים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">אריה צלמים</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n                <a href="\&quot;/ארטלי/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">ארטלי</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n                <a href="\&quot;/האחים-אהרון/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">האחים אהרון</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n                <a href="\&quot;/יוני-בקלו/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">יוני בקלו</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n                <a href="\&quot;/תפארת-ביקורת-מבנים/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">תפארת ביקורת מבנים</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n                <a href="\&quot;/agrikol/\&quot;" class="\&quot;sitemap-card\&quot;">\n                    <div class="\&quot;sitemap-card-title\&quot;">agrikol</div>\n                    <div class="\&quot;sitemap-card-date\&quot;">20/04/2024</div>\n                </a>\n            </div>\n        </section>\n\n        <section class="\&quot;sitemap-section\&quot;">\n            <div class="\&quot;section-header\&quot;">\n                <h2>קטגוריות</h2>\n            </div>\n            <div class="\&quot;tags-grid\&quot;">\n                <a href="\&quot;/category/בניית-אתרים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתרים</a>\n            </div>\n        </section>\n\n        <section class="\&quot;sitemap-section\&quot;">\n            <div class="\&quot;section-header\&quot;">\n                <h2>נושאים</h2>\n            </div>\n            <div class="\&quot;tags-grid\&quot;">\n                <a href="\&quot;/tag/אתר-ai/\&quot;" class="\&quot;tag-item\&quot;">אתר AI</a>\n                <a href="\&quot;/tag/אתר-אינטרנט-לעורך-דין/\&quot;" class="\&quot;tag-item\&quot;">אתר אינטרנט לעורך דין</a>\n                <a href="\&quot;/tag/אתר-תדמית-לחברות/\&quot;" class="\&quot;tag-item\&quot;">אתר תדמית לחברות</a>\n                <a href="\&quot;/tag/אתר-תדמית-לצלמים/\&quot;" class="\&quot;tag-item\&quot;">אתר תדמית לצלמים</a>\n                <a href="\&quot;/tag/אתר-תוכן-כלבים/\&quot;" class="\&quot;tag-item\&quot;">אתר תוכן כלבים</a>\n                <a href="\&quot;/tag/בינה-מלאכותית/\&quot;" class="\&quot;tag-item\&quot;">בינה מלאכותית</a>\n                <a href="\&quot;/tag/בניית-אתר-ב-elementor/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר ב ELEMENTOR</a>\n                <a href="\&quot;/tag/בניית-אתר-ב-visual-composer/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר ב VISUAL COMPOSER</a>\n                <a href="\&quot;/tag/בניית-אתר-ב-wpbakery/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר ב WPBAKERY</a>\n                <a href="\&quot;/tag/בניית-אתר-בינלאומי/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר בינלאומי</a>\n                <a href="\&quot;/tag/בניית-אתר-לגיל-השלישי/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לגיל השלישי</a>\n                <a href="\&quot;/tag/בניית-אתר-לחברות/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לחברות</a>\n                <a href="\&quot;/tag/בניית-אתר-לחברת-הייטק/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לחברת הייטק</a>\n                <a href="\&quot;/tag/בניית-אתר-לחברת-פרסום/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לחברת פרסום</a>\n                <a href="\&quot;/tag/בניית-אתר-לטיפול-נפשי/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לטיפול נפשי</a>\n                <a href="\&quot;/tag/בניית-אתר-למהנדסים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר למהנדסים</a>\n                <a href="\&quot;/tag/בניית-אתר-למטפלים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר למטפלים</a>\n                <a href="\&quot;/tag/בניית-אתר-למנטורים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר למנטורים</a>\n                <a href="\&quot;/tag/בניית-אתר-לסטארטאפים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לסטארטאפים</a>\n                <a href="\&quot;/tag/בניית-אתר-לעורכי-דין/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לעורכי דין</a>\n                <a href="\&quot;/tag/בניית-אתר-לעמותה/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לעמותה</a>\n                <a href="\&quot;/tag/בניית-אתר-לעסק/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לעסק</a>\n                <a href="\&quot;/tag/בניית-אתר-לעסק-קטן/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לעסק קטן</a>\n                <a href="\&quot;/tag/בניית-אתר-לפסיכוגריאטר/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לפסיכוגריאטר</a>\n                <a href="\&quot;/tag/בניית-אתר-לצלמים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לצלמים</a>\n                <a href="\&quot;/tag/בניית-אתר-לשמאים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר לשמאים</a>\n                <a href="\&quot;/tag/בניית-אתר-מכירות/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר מכירות</a>\n                <a href="\&quot;/tag/בניית-אתר-מכירות-לחנות-מוזיקה/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר מכירות לחנות מוזיקה</a>\n                <a href="\&quot;/tag/בניית-אתר-מכירות-למטפלים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר מכירות למטפלים</a>\n                <a href="\&quot;/tag/בניית-אתר-מכירות-לעסק/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר מכירות לעסק</a>\n                <a href="\&quot;/tag/בניית-אתר-מנויים/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר מנויים</a>\n                <a href="\&quot;/tag/בניית-אתר-מספר-שפות/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר מספר שפות</a>\n                <a href="\&quot;/tag/בניית-אתר-צילום/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר צילום</a>\n                <a href="\&quot;/tag/בניית-אתר-רב-לשוני/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר רב לשוני</a>\n                <a href="\&quot;/tag/בניית-אתר-תדמית-לרופא/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר תדמית לרופא</a>\n                <a href="\&quot;/tag/בניית-אתרים-לחול/\&quot;" class="\&quot;tag-item\&quot;">בניית אתרים לחו\"ל</a>\n                <a href="\&quot;/tag/בניית-דף-מכירה-לעורך-דין/\&quot;" class="\&quot;tag-item\&quot;">בניית דף מכירה לעורך דין</a>\n                <a href="\&quot;/tag/בניית-דף-נחיתה-לדרכון-פורטוגלי/\&quot;" class="\&quot;tag-item\&quot;">בניית דף נחיתה לדרכון פורטוגלי</a>\n                <a href="\&quot;/tag/בניית-דף-נחיתה-לנוטריון/\&quot;" class="\&quot;tag-item\&quot;">בניית דף נחיתה לנוטריון</a>\n                <a href="\&quot;/tag/בניית-דף-נחיתה-לעורך-דין/\&quot;" class="\&quot;tag-item\&quot;">בניית דף נחיתה לעורך דין</a>\n                <a href="\&quot;/tag/בניית-חנות-וירטואלית/\&quot;" class="\&quot;tag-item\&quot;">בניית חנות וירטואלית</a>\n                <a href="\&quot;/tag/בניית-חנות-חיות/\&quot;" class="\&quot;tag-item\&quot;">בניית חנות חיות</a>\n                <a href="\&quot;/tag/בניית-חנות-למנטור/\&quot;" class="\&quot;tag-item\&quot;">בניית חנות למנטור</a>\n                <a href="\&quot;/tag/בניית-חנות-לספרי-קודש/\&quot;" class="\&quot;tag-item\&quot;">בניית חנות לספרי קודש</a>\n                <a href="\&quot;/tag/בניית-חנות-לעסק/\&quot;" class="\&quot;tag-item\&quot;">בניית חנות לעסק</a>\n                <a href="\&quot;/tag/בניית-מגזין/\&quot;" class="\&quot;tag-item\&quot;">בניית מגזין</a>\n                <a href="\&quot;/tag/בניית-מגזין-בריאות/\&quot;" class="\&quot;tag-item\&quot;">בניית מגזין בריאות</a>\n                <a href="\&quot;/tag/בניית-מערכת-מנויים/\&quot;" class="\&quot;tag-item\&quot;">בניית מערכת מנויים</a>\n                <a href="\&quot;/tag/בניית-פורטל-תוכן/\&quot;" class="\&quot;tag-item\&quot;">בניית פורטל תוכן</a>\n                <a href="\&quot;/tag/חידוש-אתר-ישן/\&quot;" class="\&quot;tag-item\&quot;">חידוש אתר ישן</a>\n                <a href="\&quot;/tag/עיצוב-figma-לאלמנטור/\&quot;" class="\&quot;tag-item\&quot;">עיצוב FIGMA לאלמנטור</a>\n                <a href="\&quot;/tag/עיצוב-figma-לתבנית-php/\&quot;" class="\&quot;tag-item\&quot;">עיצוב FIGMA לתבנית PHP</a>\n                <a href="\&quot;/tag/פורטל-תוכן-בינה-מלאכותית/\&quot;" class="\&quot;tag-item\&quot;">פורטל תוכן בינה מלאכותית</a>\n                <a href="\&quot;/tag/שדרוג-אתר-לחברות/\&quot;" class="\&quot;tag-item\&quot;">שדרוג אתר לחברות</a>\n                <a href="\&quot;/tag/תחזקת-אתר-לחברות/\&quot;" class="\&quot;tag-item\&quot;">תחזקת אתר לחברות</a>\n                <a href="\&quot;/tag/תכנות-pixel-perfect/\&quot;" class="\&quot;tag-item\&quot;">תכנות PIXEL PERFECT</a>\n                <a href="\&quot;/tag/תכנות-ב-css/\&quot;" class="\&quot;tag-item\&quot;">תכנות ב CSS</a>\n                <a href="\&quot;/tag/תכנות-ב-html/\&quot;" class="\&quot;tag-item\&quot;">תכנות ב HTML</a>\n                <a href="\&quot;/tag/תכנות-ב-javascript/\&quot;" class="\&quot;tag-item\&quot;">תכנות ב JAVASCRIPT</a>\n                <a href="\&quot;/tag/תכנות-ב-php/\&quot;" class="\&quot;tag-item\&quot;">תכנות ב PHP</a>\n                <a href="\&quot;/tag/תכנות-מותאם-אישית-לחברות/\&quot;" class="\&quot;tag-item\&quot;">תכנות מותאם אישית לחברות</a>\n                <a href="\&quot;/tag/תכנות-עמודים-באתר/\&quot;" class="\&quot;tag-item\&quot;">תכנות עמודים באתר</a>\n                <a href="\&quot;/tag/תכנות-פיקסל-פרפקט/\&quot;" class="\&quot;tag-item\&quot;">תכנות פיקסל פרפקט</a>\n            </div>\n        </section>\n\n        <section class="\&quot;sitemap-section\&quot;">\n            <div class="\&quot;section-header\&quot;">\n                <h2>סוגי אתרים</h2>\n            </div>\n            <div class="\&quot;tags-grid\&quot;">\n                <a href="\&quot;/type/בניית-אתר-מכירות/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר מכירות</a>\n                <a href="\&quot;/type/בניית-אתר-תדמית/\&quot;" class="\&quot;tag-item\&quot;">בניית אתר תדמית</a>\n                <a href="\&quot;/type/בניית-דף-נחיתה/\&quot;" class="\&quot;tag-item\&quot;">בניית דף נח</a></div></section></main>
+    <!-- Legal Footer -->
+    <footer class="legal-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="all-rights-reserved">
+            <p>© 2026 STUDIO 555. כל הזכויות שמורות.</p>
+          </div>
+          <div class="footer-social">
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon social-facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon social-instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="social-icon social-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a></div>
+          <div class="footer-legal">
+            <a href="/privacy" aria-label="מדיניות פרטיות">
+              מדיניות פרטיות
+            </a>
+            <span class="separator">|</span>
+            <a href="/accessibility" aria-label="נגישות">
+              נגישות
+            </a>
+            <span class="separator">|</span>
+            <a href="/terms" aria-label="תנאי שימוש">
+              תנאי שימוש
+            </a>
+          </div>
+        </div>
+        <div class="zappy-attribution">
+          <p>נוצר באמצעות&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Zappy</a></p>
+        </div>
+      </div>
+    </footer>
+
+<!-- Zappy Attribution Header Script -->
+<script>
+(function() {
+  var websiteId = '76adb0ef-c17e-44c5-8e09-c3cb16361aea';
+  
+  // Don't show header in preview mode
+  var currentUrl = window.location.href;
+  var isPreview = currentUrl.includes('/preview/') || 
+                  currentUrl.includes('/preview-fullscreen/') || 
+                  currentUrl.includes('localhost:5001') ||
+                  currentUrl.includes('localhost:3000');
+  
+  if (isPreview) {
+    return; // Exit early in preview mode
+  }
+  
+  fetch('https://api.zappy5.com/api/website/' + websiteId + '/tier')
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.showAttribution) {
+        var header = document.getElementById('zappy-attribution-header');
+        if (header) {
+          // Use dynamic announcement content if available
+          if (data.announcement && data.announcement.html) {
+            header.innerHTML = data.announcement.html;
+          }
+          // Apply fixed positioning styles inline (works for existing sites too)
+          header.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99999 !important; display: flex !important; justify-content: center !important; align-items: center !important; text-align: center !important; box-sizing: border-box !important;';
+          // Fix child elements that might have position: fixed from old CSS
+          var children = header.querySelectorAll('*');
+          for (var i = 0; i < children.length; i++) {
+            children[i].style.position = 'static';
+          }
+          // Get header height
+          var headerHeight = header.offsetHeight;
+          // Find and fix navbar to be fixed as well (prevents gap at top of page)
+          var navSelectors = ['nav', '.navbar', '.nav'];
+          var navbar = null;
+          for (var j = 0; j < navSelectors.length; j++) {
+            navbar = document.querySelector(navSelectors[j]);
+            if (navbar && navbar.id !== 'zappy-attribution-header') break;
+            navbar = null;
+          }
+          if (navbar) {
+            var navbarHeight = navbar.offsetHeight;
+            navbar.style.cssText += '; position: fixed !important; top: ' + headerHeight + 'px !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99998 !important;';
+            document.body.style.paddingTop = (headerHeight + navbarHeight) + 'px';
+          } else {
+            document.body.style.paddingTop = headerHeight + 'px';
+          }
+        }
+      }
+    })
+    .catch(function(error) {
+      console.error('Failed to check tier:', error);
+    });
+})();
+</script>
+    <div data-integration="accessibility:toolbar"></div>
+</body></html>
+    <script src="/script.js"></script>
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) { document.querySelectorAll('.mobile-submenu-toggle').forEach(function(b){b.remove();}); document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(m){m.classList.remove('mobile-expanded');}); return; }
+        document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)').forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var sm = li.querySelector('.sub-menu'), pl = li.querySelector(':scope > a') || li.querySelector(':scope > .menu-group-title');
+          if (!sm || !pl) return;
+          var tb = document.createElement('button'); tb.className = 'mobile-submenu-toggle'; tb.setAttribute('aria-label', 'Toggle submenu'); tb.setAttribute('type', 'button');
+          pl.insertAdjacentElement('afterend', tb);
+          tb.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(m) { if (m !== sm) { m.classList.remove('mobile-expanded'); var t = m.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }});
+            sm.classList.toggle('mobile-expanded'); tb.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); } else { initMobileSubmenuToggles(); }
+      window.addEventListener('resize', function() { clearTimeout(window._mrt); window._mrt = setTimeout(initMobileSubmenuToggles, 250); });
+      var observer = new MutationObserver(function(mutations) { mutations.forEach(function(mutation) { if (mutation.type === 'attributes') { var target = mutation.target; if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) { setTimeout(initMobileSubmenuToggles, 100); } } }); });
+      setTimeout(function() { document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) { observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] }); }); }, 500);
+    })();
+    </script>
+</body>
+</html>

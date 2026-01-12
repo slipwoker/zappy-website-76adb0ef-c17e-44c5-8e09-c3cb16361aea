@@ -1,0 +1,37 @@
+# Clean URL redirects for Render static hosting
+# These rewrite rules show clean URLs to users while serving .html files
+
+/%D7%91%D7%95%D7%A0%D7%94-%D7%90%D7%AA%D7%A8%D7%99%D7%9D/  /בונה-אתרים/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8-%D7%9C%D7%A2%D7%A1%D7%A7/  /בניית-אתר-לעסק/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%97%D7%A0%D7%95%D7%AA-%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98%D7%99%D7%AA/  /בניית-חנות-אינטרנטית/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8%D7%99-%D7%AA%D7%93%D7%9E%D7%99%D7%AA/  /בניית-אתרי-תדמית/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%9E%D7%99%D7%A0%D7%99%D7%A1%D7%99%D7%99%D7%98/  /בניית-מיניסייט/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%9B%D7%A8%D7%98%D7%99%D7%A1-%D7%91%D7%99%D7%A7%D7%95%D7%A8-%D7%93%D7%99%D7%92%D7%99%D7%98%D7%9C%D7%99/  /בניית-כרטיס-ביקור-דיגיטלי/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%93%D7%A3-%D7%A0%D7%97%D7%99%D7%AA%D7%94/  /בניית-דף-נחיתה/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8%D7%99%D7%9D-%D7%AA%D7%99%D7%A7-%D7%A2%D7%91%D7%95%D7%93%D7%95%D7%AA/  /בניית-אתרים-תיק-עבודות/index.html  200
+/testimonials/  /testimonials.html  200
+/%D7%91%D7%95%D7%A0%D7%94-%D7%90%D7%AA%D7%A8%D7%99%D7%9D-%D7%9E%D7%95%D7%9E%D7%9C%D7%A5/  /בונה-אתרים-מומלץ/index.html  200
+/%D7%90%D7%95%D7%93%D7%95%D7%AA/  /אודות/index.html  200
+/%D7%91%D7%9C%D7%95%D7%92/  /בלוג/index.html  200
+/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A7%D7%A9%D7%A8/  /יצירת-קשר/index.html  200
+/privacy-policy/  /privacy-policy.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8%D7%99%D7%9D-%D7%95%D7%95%D7%A8%D7%93%D7%A4%D7%A8%D7%A1/  /בניית-אתרים-וורדפרס/index.html  200
+/%D7%90%D7%99%D7%9A-%D7%9C%D7%91%D7%97%D7%95%D7%A8-%D7%91%D7%95%D7%A0%D7%94-%D7%90%D7%AA%D7%A8%D7%99%D7%9D/  /איך-לבחור-בונה-אתרים/index.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8-%D7%9C%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/  /בניית-אתר-לעסקים/index.html  200
+/%D7%9E%D7%A4%D7%AA-%D7%90%D7%AA%D7%A8-%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8%D7%99%D7%9D/  /מפת-אתר-בניית-אתרים/index.html  200
+/accessibility/  /accessibility.html  200
+/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8%D7%99%D7%9D/  /בניית-אתרים/index.html  200
+/hagai-shaul/  /hagai-shaul.html  200
+/privacy  /privacy.html  200
+/accessibility  /accessibility.html  200
+/terms  /terms.html  200
+
+# Legal pages - redirect old .html URLs to friendly URLs
+/privacy.html  /privacy  301
+/accessibility.html  /accessibility  301
+/terms.html  /terms  301
+
+/  /index.html  200
+
+# 404 fallback
+/*  /index.html  404

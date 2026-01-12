@@ -1,0 +1,1500 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="מדריך מקיף לבניית אתר לעסק - למד על 8 הסיבות למה עסקים צריכים אתר, סוגי אתרים שונים, פלטפורמות בניה, עשה ואל תעשה בבניית אתר, ועלויות. קבל ייעוץ מקצועי מחגי שאול לבניית אתר שיקדם את העסק שלך.">
+    <meta name="robots" content="index, follow">
+    <title>בניית אתר לעסק</title>
+    <link rel="canonical" href="https://hagai-shaul.com/בניית-אתר-לעסק/">
+    <style>
+        :root {
+            --primary-color: #00c8aa;
+            --dark-color: #333333;
+            --black-color: #000000;
+            --navy-color: #2a3e60;
+            --charcoal-color: #3f444b;
+            --gray-color: #33373d;
+            --white-color: #ffffff;
+            --light-bg: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--dark-color);
+            background-color: var(--white-color);
+            overflow-x: hidden;
+        }
+
+        /* Skip to content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 0 0 0 4px;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header & Navigation */
+        .site-header {
+            background: var(--white-color);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--navy-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            color: var(--primary-color);
+        }
+
+        .main-nav {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 16px;
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(0, 200, 170, 0.08);
+        }
+
+        .nav-item.has-submenu > .nav-link::after {
+            content: '▼';
+            font-size: 0.7rem;
+            margin-right: 5px;
+        }
+
+        .submenu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white-color);
+            box-shadow: var(--shadow-md);
+            border-radius: 8px;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            list-style: none;
+            padding: 8px 0;
+            margin-top: 5px;
+        }
+
+        .nav-item.has-submenu:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .submenu .nav-link {
+            padding: 10px 20px;
+            border-radius: 0;
+        }
+
+        .submenu .nav-link:hover {
+            background-color: var(--light-bg);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--navy-color);
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--navy-color) 0%, var(--charcoal-color) 100%);
+            color: var(--white-color);
+            padding: 120px 20px 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .section-intro h2 {
+            font-size: 2.5rem;
+            color: var(--navy-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .section-intro p {
+            font-size: 1.15rem;
+            color: var(--gray-color);
+            line-height: 1.8;
+        }
+
+        /* Reasons Grid */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .reason-card {
+            background: var(--white-color);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-right: 4px solid var(--primary-color);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .reason-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .reason-card h3 {
+            font-size: 1.4rem;
+            color: var(--navy-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .reason-card p {
+            color: var(--gray-color);
+            line-height: 1.7;
+        }
+
+        .reason-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), #00a88e);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        /* Website Types Section */
+        .website-types {
+            background: var(--light-bg);
+            padding: 80px 20px;
+            margin: 60px 0;
+        }
+
+        .types-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .type-card {
+            background: var(--white-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .type-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-color), #00a88e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+        }
+
+        .type-card h3 {
+            font-size: 1.3rem;
+            color: var(--navy-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Do's and Don'ts Section */
+        .dos-donts-section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .dos-donts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .dos-card,
+        .donts-card {
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .dos-card {
+            background: linear-gradient(135deg, #e8f8f5, #ffffff);
+            border-right: 5px solid var(--primary-color);
+        }
+
+        .donts-card {
+            background: linear-gradient(135deg, #fff5f5, #ffffff);
+            border-right: 5px solid #e74c3c;
+        }
+
+        .dos-card h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .donts-card h3 {
+            color: #e74c3c;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .dos-card ul,
+        .donts-card ul {
+            list-style: none;
+        }
+
+        .dos-card li,
+        .donts-card li {
+            padding: 12px 0 12px 35px;
+            position: relative;
+            color: var(--gray-color);
+            line-height: 1.6;
+        }
+
+        .dos-card li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .donts-card li::before {
+            content: '✗';
+            position: absolute;
+            right: 0;
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        /* Clients Slider Section */
+        .clients-section {
+            background: var(--navy-color);
+            color: var(--white-color);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .clients-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            font-weight: 700;
+        }
+
+        .clients-slider {
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .clients-track {
+            display: flex;
+            gap: 40px;
+            animation: scroll 30s linear infinite;
+            align-items: center;
+        }
+
+        .client-logo {
+            flex: 0 0 auto;
+            background: var(--white-color);
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .client-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .client-logo img {
+            max-width: 180px;
+            height: 80px;
+            object-fit: contain;
+            display: block;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-color), #00a88e);
+            color: var(--white-color);
+            padding: 80px 20px;
+            text-align: center;
+            margin: 80px 0 0;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background: var(--white-color);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+            background: var(--navy-color);
+            color: var(--white-color);
+        }
+
+        /* Footer */
+        .site-footer {
+            background: var(--charcoal-color);
+            color: var(--white-color);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-section h1 {
+                font-size: 2.8rem;
+            }
+
+            .dos-donts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-nav {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                width: 280px;
+                height: calc(100vh - 80px);
+                background: var(--white-color);
+                box-shadow: var(--shadow-lg);
+                transition: var(--transition);
+                overflow-y: auto;
+            }
+
+            .main-nav.active {
+                right: 0;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                padding: 20px 0;
+                gap: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+            }
+
+            .nav-link {
+                padding: 15px 25px;
+                border-radius: 0;
+            }
+
+            .submenu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: var(--light-bg);
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .nav-item.has-submenu.active .submenu {
+                max-height: 500px;
+            }
+
+            .nav-item.has-submenu > .nav-link {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .hero-section {
+                padding: 80px 20px 60px;
+            }
+
+            .hero-section h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-section .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-intro h2 {
+                font-size: 2rem;
+            }
+
+            .reasons-grid,
+            .types-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .clients-track {
+                gap: 20px;
+            }
+
+            .client-logo img {
+                max-width: 140px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .reason-card,
+            .type-card {
+                padding: 25px;
+            }
+
+            .dos-card,
+            .donts-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<style>
+/* Zappy Attribution Header Styles */
+.zappy-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0px 4px 19px 0px rgba(0,0,0,0.04);
+  padding: 16px 10px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 21px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 21px;
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
+
+    .zappy-header p {
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: baseline;
+      margin-bottom: 0 !important;
+      direction: ltr !important;
+    }
+
+.zappy-header .zappy-link {
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.zappy-header .zappy-link:hover {
+  opacity: 0.7;
+}</style>
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+<!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '76adb0ef-c17e-44c5-8e09-c3cb16361aea',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- Zappy Attribution Header -->
+<div id="zappy-attribution-header" class="zappy-header" style="display: none;">
+  <p>Happily created by&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" class="zappy-link">Zappy</a></p>
+</div>
+    <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
+    <header class="site-header">
+        <div class="header-container">
+            <a href="/" class="logo">חגי שאול - בניית אתרים</a>
+            
+            <nav class="main-nav" role="navigation" aria-label="תפריט ראשי">
+                <ul class="nav-menu">
+                    <li class="nav-item has-submenu">
+                        <a href="/בונה-אתרים/" class="nav-link">בונה אתרים</a>
+                        <ul class="submenu">
+                            <li><a href="/בונה-אתרים/" class="nav-link">בונה אתרים</a></li>
+                            <li><a href="/בניית-אתר-לעסק/" class="nav-link active">בניית אתר לעסק</a></li>
+                            <li><a href="/בניית-חנות-אינטרנטית/" class="nav-link">בניית חנות אינטרנטית</a></li>
+                            <li><a href="/בניית-אתרי-תדמית/" class="nav-link">בניית אתרי תדמית</a></li>
+                            <li><a href="/בניית-מיניסייט/" class="nav-link">בניית מיניסייט</a></li>
+                            <li><a href="/בניית-כרטיס-ביקור-דיגיטלי/" class="nav-link">בניית כרטיס ביקור דיגיטלי</a></li>
+                            <li><a href="/בניית-דף-נחיתה/" class="nav-link">בניית דף נחיתה</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/בניית-אתרים-תיק-עבודות/" class="nav-link">תיק עבודות</a></li>
+                    <li class="nav-item"><a href="/testimonials/" class="nav-link">לקוחות ממליצים</a></li>
+                    <li class="nav-item"><a href="/בונה-אתרים-מומלץ/" class="nav-link">בונה אתרים מומלץ</a></li>
+                    <li class="nav-item has-submenu">
+                        <a href="/אודות/" class="nav-link">אודות</a>
+                        <ul class="submenu">
+                            <li><a href="/testimonials/" class="nav-link">לקוחות ממליצים</a></li>
+                            <li><a href="/בונה-אתרים-מומלץ/" class="nav-link">בונה אתרים מומלץ</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/בלוג/" class="nav-link">בלוג</a></li>
+                    <li class="nav-item"><a href="/יצירת-קשר/" class="nav-link">יצירת קשר</a></li>
+                </ul>
+            </nav>
+
+            <button class="mobile-menu-toggle" aria-label="תפריט" aria-expanded="false">
+                ☰
+            </button>
+        </div>
+    </header>
+
+    <main id="main-content" role="main">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>בניית אתר לעסק</h1>
+                <p class="subtitle">המדריך המקיף לבניית אתר אינטרנט מקצועי שיקדם את העסק שלך</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-intro">
+                <h2>למה עסקים צריכים בניית אתר לעסק?</h2>
+                <p>בעידן הדיגיטלי של היום, אתר אינטרנט הוא לא רק כלי שיווקי - הוא הבית הדיגיטלי של העסק שלך. הנה 8 סיבות מרכזיות למה כל עסק צריך אתר מקצועי.</p>
+            </div>
+
+            <div class="reasons-grid">
+                <div class="reason-card" style="animation-delay: 0.1s">
+                    <div class="reason-number">1</div>
+                    <h3>הצגת מקצועיות ויצירת אמינות למותג</h3>
+                    <p>אתר מעוצב ומקצועי מעביר מסר של אמינות ויוצר רושם ראשוני חיובי אצל לקוחות פוטנציאליים. הוא משקף את איכות השירותים שלך ומבדיל אותך מהמתחרים.</p>
+                </div>
+
+                <div class="reason-card" style="animation-delay: 0.2s">
+                    <div class="reason-number">2</div>
+                    <h3>אתר אינטרנט מסייע בהגברת המודעות למותג</h3>
+                    <p>נוכחות דיגיטלית חזקה מגבירה את החשיפה של המותג שלך. אתר מאפשר ללקוחות למצוא אותך בקלות ולהכיר את השירותים והערכים שלך.</p>
+                </div>
+
+                <div class="reason-card" style="animation-delay: 0.3s">
+                    <div class="reason-number">3</div>
+                    <h3>האתר שלך הוא העוגן השיווקי של העסק</h3>
+                    <p>כל הפעילות השיווקית שלך - מדיה חברתית, פרסום ממומן, קמפיינים - מובילה לאתר. הוא המקום שבו הלקוח מקבל החלטה ומבצע פעולה.</p>
+                </div>
+
+                <div class="reason-card" style="animation-delay: 0.4s">
+                    <div class="reason-number">4</div>
+                    <h3>חיבור ללקוחות חדשים ושמירה על לקוחות קיימים</h3>
+                    <p>אתר מאפשר לך להגיע ללקוחות חדשים 24/7 ולשמור על קשר עם לקוחות קיימים דרך תוכן מעודכן, בלוג, וערוצי תקשורת נוספים.</p>
+                </div>
+
+                <div class="reason-card" style="animation-delay: 0.5s">
+                    <div class="reason-number">5</div>
+                    <h3>אתר אינטרנט מאפשר להתחרות במותגים גדולים</h3>
+                    <p>גם עסק קטן יכול להיראות מקצועי ומרשים באינטרנט. אתר איכותי משווה את המגרש ומאפשר לך להתחרות בשחקנים גדולים בתחום.</p>
+                </div>
+
+                <div class="reason-card" style="animation-delay: 0.6s">
+                    <div class="reason-number">6</div>
+                    <h3>אתר אינטרנט מרשים לקוחות פוטנציאליים ולקוחות קיימים עם הידע שלך</h3>
+                    <p>דרך תוכן איכותי, מאמרים ומדריכים, אתה יכול להציג את המומחיות שלך ולבנות אמון עם הקהל שלך.</p>
+                </div>
+
+                <div class="reason-card" style="animation-delay: 0.7s">
+                    <div class="reason-number">7</div>
+                    <h3>קידום שירותים ומכירת מוצרים באתר</h3>
+                    <p>אתר מאפשר לך להציג את כל השירותים והמוצרים שלך בצורה מסודרת ואטרקטיבית, ואף למכור ישירות דרך האתר.</p>
+                </div>
+
+                <div class="reason-card" style="animation-delay: 0.8s">
+                    <div class="reason-number">8</div>
+                    <h3>הצגת הכשרון שלך והצגת פרויקטים והצלחות</h3>
+                    <p>תיק עבודות דיגיטלי מאפשר לך להציג את הפרויקטים המוצלחים שלך, המלצות לקוחות, ולהוכיח את היכולות שלך בצורה ויזואלית.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="website-types">
+            <div class="types-container">
+                <div class="section-intro">
+                    <h2>מהם סוגי האתרים הנפוצים לעסקים?</h2>
+                    <p>קיימים מספר סוגי אתרים שונים, כל אחד מתאים למטרה ולצורך אחר. הנה הסוגים העיקריים:</p>
+                </div>
+
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-icon">🛒</div>
+                        <h3>אתר מכירות לעסק</h3>
+                        <p>חנות אינטרנטית מלאה המאפשרת מכירה ישירה של מוצרים ושירותים עם מערכת תשלום מאובטחת.</p>
+                    </div>
+
+                    <div class="type-card">
+                        <div class="type-icon">📰</div>
+                        <h3>אתר פורטל תוכן לעסק</h3>
+                        <p>אתר עשיר בתוכן, מאמרים ומידע המיועד לספק ערך ולמשוך קהל יעד רלוונטי.</p>
+                    </div>
+
+                    <div class="type-card">
+                        <div class="type-icon">✨</div>
+                        <h3>אתר תדמית לעסק</h3>
+                        <p>אתר המציג את העסק, השירותים והערכים שלו בצורה מקצועית ומרשימה.</p>
+                    </div>
+
+                    <div class="type-card">
+                        <div class="type-icon">🎯</div>
+                        <h3>דף נחיתה לעסק</h3>
+                        <p>עמוד בודד ממוקד המיועד להמרה גבוהה של מבקרים ללידים או לקוחות.</p>
+                    </div>
+
+                    <div class="type-card">
+                        <div class="type-icon">📱</div>
+                        <h3>מיניסייט לעסק (Minisite)</h3>
+                        <p>אתר קומפקטי בן מספר עמודים המציג מידע ממוקד על שירות או מוצר ספציפי.</p>
+                    </div>
+
+                    <div class="type-card">
+                        <div class="type-icon">💼</div>
+                        <h3>כרטיס ביקור דיגיטלי לעסק</h3>
+                        <p>עמוד בודד המרכז את כל פרטי הקשר והמידע החיוני על העסק בצורה נגישה.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-intro">
+                <h2>אילו פלטפורמות יש היום לבניית אתר לעסק?</h2>
+                <p>בשוק קיימות מספר פלטפורמות מובילות לבניית אתרים, כל אחת עם יתרונות וחסרונות. הפלטפורמות הפופולריות ביותר כוללות WordPress, Wix, Shopify לחנויות אונליין, ו-Webflow למעצבים מתקדמים. בחירת הפלטפורמה הנכונה תלויה בצרכים הספציפיים של העסק, התקציב והיכולות הטכניות.</p>
+            </div>
+        </section>
+
+        <section class="dos-donts-section">
+            <div class="section-intro">
+                <h2>בניית אתר לעסק – עשה ואל תעשה</h2>
+                <p>כדי להבטיח שהאתר שלך יהיה מוצלח ואפקטיבי, חשוב לדעת מה כן לעשות ומה להימנע ממנו:</p>
+            </div>
+
+            <div class="dos-donts-grid">
+                <div class="dos-card">
+                    <h3>מה כן לעשות בבניית אתר לעסק</h3>
+                    <ul>
+                        <li>השקיעו בעיצוב מקצועי ומודרני שמשקף את המותג</li>
+                        <li>וודאו שהאתר מותאם למובייל ומהיר בטעינה</li>
+                        <li>צרו תוכן איכותי ורלוונטי לקהל היעד</li>
+                        <li>הוסיפו קריאות לפעולה (CTA) ברורות וממירות</li>
+                        <li>השתמשו בתמונות איכותיות ומקצועיות</li>
+                        <li>בנו מבנה ניווט פשוט ואינטואיטיבי</li>
+                        <li>הוסיפו המלצות ולקוחות מרוצים</li>
+                        <li>דאגו לאבטחת האתר (SSL) ולגיבויים קבועים</li>
+                        <li>בצעו אופטימיזציה למנועי חיפוש (SEO)</li>
+                        <li>הוסיפו פרטי קשר נגישים ובולטים</li>
+                    </ul>
+                </div>
+
+                <div class="donts-card">
+                    <h3>מה לא לעשות בבניית אתר לעסק</h3>
+                    <ul>
+                        <li>אל תשתמשו בתבניות גנריות ללא התאמה אישית</li>
+                        <li>אל תעמיסו את האתר בתוכן מיותר ומבלבל</li>
+                        <li>אל תזניחו את חווית המשתמש במובייל</li>
+                        <li>אל תשתמשו בתמונות באיכות נמוכה או לא רלוונטיות</li>
+                        <li>אל תתעלמו ממהירות טעינת האתר</li>
+                        <li>אל תשכחו לעדכן את התוכן באופן קבוע</li>
+                        <li>אל תסתירו מידע חשוב בתפריטים מורכבים</li>
+                        <li>אל תשתמשו בצבעים לא מותאמים או קשים לקריאה</li>
+                        <li>אל תזניחו את נושא האבטחה והפרטיות</li>
+                        <li>אל תשכחו לבדוק את האתר בדפדפנים שונים</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-intro">
+                <h2>כמה עולה בניית אתר לעסק?</h2>
+                <p>עלות בניית אתר לעסק משתנה בהתאם למורכבות, לפלטפורמה הנבחרת ולדרישות הספציפיות. אתר בסיסי יכול לעלות החל מכמה אלפי שקלים, בעוד שאתר מורכב עם פונקציונליות מתקדמת יכול להגיע לעשרות אלפי שקלים. חשוב לזכור שמדובר בהשקעה עסקית שמחזירה את עצמה לאורך זמן דרך הגדלת החשיפה, המכירות והאמינות של העסק.</p>
+            </div>
+        </section>
+
+        <section class="clients-section">
+            <h2>בין לקוחותינו</h2>
+            <div class="clients-slider">
+                <div class="clients-track">
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-4.webp" alt="לוגו אתר רק בריאות" loading="lazy" data-image-index="0">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-6.webp" alt="shemer production" loading="lazy" data-image-index="1">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-7.webp" alt="migo-r.co.il" loading="lazy" data-image-index="2">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-8.webp" alt="grohsystems" loading="lazy" data-image-index="3">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-9.webp" alt="leizerovits" loading="lazy" data-image-index="4">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-10.webp" alt="moreshet maran" loading="lazy" data-image-index="5">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-11.webp" alt="plannieapp.com" loading="lazy" data-image-index="6">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-12.webp" alt="Seo-Run.co.il" loading="lazy" data-image-index="7">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-13.webp" alt="STAR MARKETING" loading="lazy" data-image-index="8">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-14.webp" alt="hashmal adir" loading="lazy" data-image-index="9">
+                    </div>
+                    <!-- Duplicate for seamless loop -->
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-4.webp" alt="לוגו אתר רק בריאות" loading="lazy" data-image-index="0">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-6.webp" alt="shemer production" loading="lazy" data-image-index="1">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-7.webp" alt="migo-r.co.il" loading="lazy" data-image-index="2">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-8.webp" alt="grohsystems" loading="lazy" data-image-index="3">
+                    </div>
+                    <div class="client-logo">
+                        <img src="/assets/swiper-slide-9.webp" alt="leizerovits" loading="lazy" data-image-index="4">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>צריך אתר חדש לעסק שלך, פנה עכשיו!</h2>
+                <p>בואו ניצור ביחד את האתר המושלם לעסק שלכם. אתר שיביא תוצאות אמיתיות ויקדם את העסק שלכם קדימה.</p>
+                <a href="/יצירת-קשר/" class="cta-button">צור קשר עכשיו</a>
+            </div>
+        </section>
+    </main>
+
+    
+    <!-- Legal Footer -->
+    <footer class="legal-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="all-rights-reserved">
+            <p>© 2026 STUDIO 555. כל הזכויות שמורות.</p>
+          </div>
+          <div class="footer-social">
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon social-facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon social-instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="social-icon social-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a></div>
+          <div class="footer-legal">
+            <a href="/privacy" aria-label="מדיניות פרטיות">
+              מדיניות פרטיות
+            </a>
+            <span class="separator">|</span>
+            <a href="/accessibility" aria-label="נגישות">
+              נגישות
+            </a>
+            <span class="separator">|</span>
+            <a href="/terms" aria-label="תנאי שימוש">
+              תנאי שימוש
+            </a>
+          </div>
+        </div>
+        <div class="zappy-attribution">
+          <p>נוצר באמצעות&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Zappy</a></p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mainNav = document.querySelector('.main-nav');
+        const body = document.body;
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            const isExpanded = mainNav.classList.contains('active');
+            mobileMenuToggle.setAttribute('aria-expanded', isExpanded);
+            mobileMenuToggle.textContent = isExpanded ? '✕' : '☰';
+        });
+
+        // Mobile submenu toggle
+        const hasSubmenuItems = document.querySelectorAll('.nav-item.has-submenu');
+        
+        hasSubmenuItems.forEach(item => {
+            const link = item.querySelector('.nav-link');
+            
+            link.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    item.classList.toggle('active');
+                }
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.main-nav') && !e.target.closest('.mobile-menu-toggle')) {
+                mainNav.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.textContent = '☰';
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.reason-card, .type-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Pause animation on hover for clients slider
+        const clientsTrack = document.querySelector('.clients-track');
+        if (clientsTrack) {
+            clientsTrack.addEventListener('mouseenter', () => {
+                clientsTrack.style.animationPlayState = 'paused';
+            });
+            clientsTrack.addEventListener('mouseleave', () => {
+                clientsTrack.style.animationPlayState = 'running';
+            });
+        }
+    </script>
+
+
+<!-- Zappy Attribution Header Script -->
+<script>
+(function() {
+  var websiteId = '76adb0ef-c17e-44c5-8e09-c3cb16361aea';
+  
+  // Don't show header in preview mode
+  var currentUrl = window.location.href;
+  var isPreview = currentUrl.includes('/preview/') || 
+                  currentUrl.includes('/preview-fullscreen/') || 
+                  currentUrl.includes('localhost:5001') ||
+                  currentUrl.includes('localhost:3000');
+  
+  if (isPreview) {
+    return; // Exit early in preview mode
+  }
+  
+  fetch('https://api.zappy5.com/api/website/' + websiteId + '/tier')
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.showAttribution) {
+        var header = document.getElementById('zappy-attribution-header');
+        if (header) {
+          // Use dynamic announcement content if available
+          if (data.announcement && data.announcement.html) {
+            header.innerHTML = data.announcement.html;
+          }
+          // Apply fixed positioning styles inline (works for existing sites too)
+          header.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99999 !important; display: flex !important; justify-content: center !important; align-items: center !important; text-align: center !important; box-sizing: border-box !important;';
+          // Fix child elements that might have position: fixed from old CSS
+          var children = header.querySelectorAll('*');
+          for (var i = 0; i < children.length; i++) {
+            children[i].style.position = 'static';
+          }
+          // Get header height
+          var headerHeight = header.offsetHeight;
+          // Find and fix navbar to be fixed as well (prevents gap at top of page)
+          var navSelectors = ['nav', '.navbar', '.nav'];
+          var navbar = null;
+          for (var j = 0; j < navSelectors.length; j++) {
+            navbar = document.querySelector(navSelectors[j]);
+            if (navbar && navbar.id !== 'zappy-attribution-header') break;
+            navbar = null;
+          }
+          if (navbar) {
+            var navbarHeight = navbar.offsetHeight;
+            navbar.style.cssText += '; position: fixed !important; top: ' + headerHeight + 'px !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99998 !important;';
+            document.body.style.paddingTop = (headerHeight + navbarHeight) + 'px';
+          } else {
+            document.body.style.paddingTop = headerHeight + 'px';
+          }
+        }
+      }
+    })
+    .catch(function(error) {
+      console.error('Failed to check tier:', error);
+    });
+})();
+</script>
+    <div data-integration="accessibility:toolbar"></div>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+    <script src="/script.js"></script>
+</body></html>

@@ -1,0 +1,1336 @@
+<!DOCTYPE html><html lang="he-IL" dir="rtl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="בונה אתרים מומלץ - חגי שאול מומחה בוורדפרס לבנייה, שדרוג ותחזוקה של אתרים. שירותי בניית אתרים מקצועיים לעסקים כולל אתרי מכירות, תדמית, מיניסייט, דפי נחיתה וכרטיסי ביקור דיגיטלי. תהליך מקצועי ומלא של בניית אתרים איכותיים.">
+    <meta name="robots" content="index, follow">
+    <title>בונה אתרים מומלץ</title>
+    <style>
+        :root {
+            --primary-color: #00c8aa;
+            --dark-color: #333333;
+            --black-color: #000000;
+            --navy-color: #2a3e60;
+            --charcoal-color: #3f444b;
+            --gray-color: #33373d;
+            --white-color: #ffffff;
+            --light-bg: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--dark-color);
+            background-color: var(--white-color);
+            overflow-x: hidden;
+        }
+
+        /* Skip to content link for accessibility */
+        .skip-to-content {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 100;
+            border-radius: 0 0 0 4px;
+        }
+
+        .skip-to-content:focus {
+            top: 0;
+        }
+
+        /* Header & Navigation */
+        .site-header {
+            background: var(--white-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--navy-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--primary-color);
+        }
+
+        .main-nav {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 16px;
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            color: var(--primary-color);
+            background: rgba(0, 200, 170, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background: rgba(0, 200, 170, 0.15);
+            font-weight: 600;
+        }
+
+        /* Dropdown Menu */
+        .nav-item.has-submenu > .nav-link::after {
+            content: '▼';
+            font-size: 0.7rem;
+            margin-right: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item.has-submenu:hover > .nav-link::after {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white-color);
+            min-width: 250px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            list-style: none;
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+        .nav-item.has-submenu:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .submenu .nav-link {
+            padding: 12px 20px;
+            border-radius: 0;
+        }
+
+        .submenu .nav-link:hover {
+            background: rgba(0, 200, 170, 0.1);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--navy-color);
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--navy-color) 0%, var(--charcoal-color) 100%);
+            color: var(--white-color);
+            padding: 120px 20px 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero-section .subheading {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        /* Services Grid */
+        .services-section {
+            padding: 100px 20px;
+            background: var(--white-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--navy-color);
+            margin-bottom: 60px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: var(--white-color);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(0,200,170,0.2);
+            border-color: var(--primary-color);
+        }
+
+        .service-card::before {
+            content: '✓';
+            display: block;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-color), #00a890);
+            color: white;
+            border-radius: 50%;
+            font-size: 2rem;
+            line-height: 60px;
+            font-weight: bold;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            color: var(--navy-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Process Section */
+        .process-section {
+            padding: 100px 20px;
+            background: var(--light-bg);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .process-step {
+            background: var(--white-color);
+            padding: 35px 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .process-step .step-number {
+            position: absolute;
+            top: -15px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(0,200,170,0.3);
+        }
+
+        .process-step h3 {
+            color: var(--navy-color);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        /* Clients Logos Section */
+        .clients-section {
+            padding: 100px 20px;
+            background: var(--white-color);
+        }
+
+        .clients-slider {
+            margin-top: 50px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .clients-track {
+            display: flex;
+            gap: 40px;
+            animation: scroll 30s linear infinite;
+            align-items: center;
+        }
+
+        .client-logo {
+            flex: 0 0 auto;
+            width: 180px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--white-color);
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .client-logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .client-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .client-logo:hover img {
+            filter: grayscale(0%);
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 100px 20px;
+            background: var(--light-bg);
+        }
+
+        .faq-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 50px;
+            font-size: 1.1rem;
+            color: var(--charcoal-color);
+        }
+
+        /* Footer */
+        .site-footer {
+            background: var(--navy-color);
+            color: var(--white-color);
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                gap: 2px;
+            }
+
+            .nav-link {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-nav {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--white-color);
+                transition: right 0.3s ease;
+                overflow-y: auto;
+                box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            }
+
+            .main-nav.active {
+                right: 0;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                padding: 20px;
+                gap: 0;
+                align-items: stretch;
+            }
+
+            .nav-item {
+                border-bottom: 1px solid #eee;
+            }
+
+            .nav-link {
+                padding: 15px 10px;
+                font-size: 1rem;
+            }
+
+            .submenu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(0, 200, 170, 0.05);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .nav-item.has-submenu.active .submenu {
+                max-height: 500px;
+            }
+
+            .nav-item.has-submenu > .nav-link::after {
+                float: left;
+            }
+
+            .hero-section {
+                padding: 80px 20px 60px;
+            }
+
+            .hero-section h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-section .subheading {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .services-grid,
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .clients-track {
+                gap: 20px;
+            }
+
+            .client-logo {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .service-card,
+            .process-step {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        a:focus {
+            outline: 3px solid var(--primary-color);
+        }
+    </style>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<style>
+/* Zappy Attribution Header Styles */
+.zappy-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0px 4px 19px 0px rgba(0,0,0,0.04);
+  padding: 16px 10px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 21px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 21px;
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
+
+    .zappy-header p {
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: baseline;
+      margin-bottom: 0 !important;
+      direction: ltr !important;
+    }
+
+.zappy-header .zappy-link {
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.zappy-header .zappy-link:hover {
+  opacity: 0.7;
+}</style>
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+<!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '76adb0ef-c17e-44c5-8e09-c3cb16361aea',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- Zappy Attribution Header -->
+<div id="zappy-attribution-header" class="zappy-header" style="display: none;">
+  <p>Happily created by&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" class="zappy-link">Zappy</a></p>
+</div>
+    <a href="#main-content" class="skip-to-content">דלג לתוכן הראשי</a>
+
+    <!-- Header -->
+    <header class="site-header" role="banner">
+        <div class="header-container">
+            <a href="/" class="logo" aria-label="חזרה לדף הבית">חגי שאול - בניית אתרים</a>
+            
+            <nav class="main-nav" role="navigation" aria-label="תפריט ראשי">
+                <ul class="nav-menu">
+                    <li class="nav-item has-submenu">
+                        <a href="/בונה-אתרים/" class="nav-link">בונה אתרים</a>
+                        <ul class="submenu">
+                            <li class="nav-item"><a href="/בניית-אתר-לעסק/" class="nav-link">בניית אתר לעסק</a></li>
+                            <li class="nav-item"><a href="/בניית-חנות-אינטרנטית/" class="nav-link">בניית חנות אינטרנטית</a></li>
+                            <li class="nav-item"><a href="/בניית-אתרי-תדמית/" class="nav-link">בניית אתרי תדמית</a></li>
+                            <li class="nav-item"><a href="/בניית-מיניסייט/" class="nav-link">בניית מיניסייט</a></li>
+                            <li class="nav-item"><a href="/בניית-כרטיס-ביקור-דיגיטלי/" class="nav-link">בניית כרטיס ביקור דיגיטלי</a></li>
+                            <li class="nav-item"><a href="/בניית-דף-נחיתה/" class="nav-link">בניית דף נחיתה</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/בניית-אתרים-תיק-עבודות/" class="nav-link">תיק עבודות</a></li>
+                    <li class="nav-item"><a href="/testimonials/" class="nav-link">לקוחות ממליצים</a></li>
+                    <li class="nav-item"><a href="/בונה-אתרים-מומלץ/" class="nav-link active" aria-current="page">בונה אתרים מומלץ</a></li>
+                    <li class="nav-item has-submenu">
+                        <a href="/אודות/" class="nav-link">אודות</a>
+                        <ul class="submenu">
+                            <li class="nav-item"><a href="/testimonials/" class="nav-link">לקוחות ממליצים</a></li>
+                            <li class="nav-item"><a href="/בונה-אתרים-מומלץ/" class="nav-link">בונה אתרים מומלץ</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="/בלוג/" class="nav-link">בלוג</a></li>
+                    <li class="nav-item"><a href="/יצירת-קשר/" class="nav-link">יצירת קשר</a></li>
+                </ul>
+            </nav>
+
+            <button class="mobile-menu-toggle" aria-label="תפריט" aria-expanded="false">
+                ☰
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>בונה אתרים מומלץ</h1>
+                <p class="subheading">מחפש/ת בונה אתרים מומלץ, מומחה בוורדפרס לבנייה, שדרוג ותחזוקה לאתר שלכם?<br><br>אשמח להיות חלק מההצלחה העסקית שלך!</p>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services-section">
+            <div class="container">
+                <h2 class="section-title">שירותי בונה אתרים מומלץ</h2>
+                <div class="services-grid">
+                    <div class="service-card fade-in">
+                        <h3>בונה אתרי מכירות</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>בונה אתרי תדמית</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>בונה אתר מיניסייט לעסק קטן</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>בונה דפי נחיתה</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>כרטיסי ביקור דיגיטלי</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>תחזוקה וניהול אתרים</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>חידוש אתרי אינטרנט ישנים</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>שדרוג והוספת תכונות חדשות</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>שרתים ואחסון אתרים</h3>
+                    </div>
+                    <div class="service-card fade-in">
+                        <h3>דומיינים (שמות מתחם)</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clients Section -->
+        <section class="clients-section">
+            <div class="container">
+                <h2 class="section-title">בין לקוחותינו</h2>
+                <div class="clients-slider" aria-label="לוגואים של לקוחות">
+                    <div class="clients-track">
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-4.webp" alt="לוגו אתר רק בריאות" loading="lazy" data-image-index="0">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-6.webp" alt="shemer production" loading="lazy" data-image-index="1">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-7.webp" alt="migo-r.co.il" loading="lazy" data-image-index="2">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-8.webp" alt="grohsystems" loading="lazy" data-image-index="3">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-9.webp" alt="leizerovits" loading="lazy" data-image-index="4">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-10.webp" alt="moreshet maran" loading="lazy" data-image-index="5">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-11.webp" alt="plannieapp.com" loading="lazy" data-image-index="6">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-12.webp" alt="Seo-Run.co.il" loading="lazy" data-image-index="7">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-13.webp" alt="STAR MARKETING" loading="lazy" data-image-index="8">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-14.webp" alt="hashmal adir" loading="lazy" data-image-index="9">
+                        </div>
+                        <!-- Duplicate for seamless loop -->
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-4.webp" alt="לוגו אתר רק בריאות" loading="lazy" data-image-index="0">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-6.webp" alt="shemer production" loading="lazy" data-image-index="1">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-7.webp" alt="migo-r.co.il" loading="lazy" data-image-index="2">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-8.webp" alt="grohsystems" loading="lazy" data-image-index="3">
+                        </div>
+                        <div class="client-logo">
+                            <img src="/assets/swiper-slide-9.webp" alt="leizerovits" loading="lazy" data-image-index="4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="process-section">
+            <div class="container">
+                <h2 class="section-title">מהו התהליך הנכון לבניית אתר אינטרנט איכותי?</h2>
+                <div class="process-steps">
+                    <div class="process-step fade-in">
+                        <span class="step-number">01</span>
+                        <h3>שלב ההיכרות</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">02</span>
+                        <h3>הצעת מחיר והסכם התקשרות</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">03</span>
+                        <h3>אפיון האתר</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">04</span>
+                        <h3>דומיין ואחסון האתר</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">05</span>
+                        <h3>עיצוב עמוד הבית</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">06</span>
+                        <h3>בניית עמוד הבית</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">07</span>
+                        <h3>בניית שאר העמודים</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">08</span>
+                        <h3>הזנת תכנים ומוצרים</h3>
+                    </div>
+                    <div class="process-step fade-in">
+                        <span class="step-number">09</span>
+                        <h3>טסטים אחרונים ועלייה לאוויר</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <h2 class="section-title">שאלות נפוצות בנוגע לבונה אתרים</h2>
+                <div class="faq-intro">
+                    <p>יש לכם שאלות? אנחנו כאן כדי לעזור! צרו איתנו קשר לקבלת מידע נוסף על שירותי בניית האתרים שלנו.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    
+    <!-- Legal Footer -->
+    <footer class="legal-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="all-rights-reserved">
+            <p>© 2026 STUDIO 555. כל הזכויות שמורות.</p>
+          </div>
+          <div class="footer-social">
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon social-facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon social-instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="social-icon social-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a></div>
+          <div class="footer-legal">
+            <a href="/privacy" aria-label="מדיניות פרטיות">
+              מדיניות פרטיות
+            </a>
+            <span class="separator">|</span>
+            <a href="/accessibility" aria-label="נגישות">
+              נגישות
+            </a>
+            <span class="separator">|</span>
+            <a href="/terms" aria-label="תנאי שימוש">
+              תנאי שימוש
+            </a>
+          </div>
+        </div>
+        <div class="zappy-attribution">
+          <p>נוצר באמצעות&nbsp;<a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Zappy</a></p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mainNav = document.querySelector('.main-nav');
+        const body = document.body;
+
+        mobileMenuToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            const isExpanded = mainNav.classList.contains('active');
+            this.setAttribute('aria-expanded', isExpanded);
+            this.textContent = isExpanded ? '✕' : '☰';
+        });
+
+        // Mobile Submenu Toggle
+        const hasSubmenuItems = document.querySelectorAll('.nav-item.has-submenu');
+        
+        hasSubmenuItems.forEach(item => {
+            const link = item.querySelector('.nav-link');
+            
+            link.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    item.classList.toggle('active');
+                }
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.main-nav') && !e.target.closest('.mobile-menu-toggle')) {
+                mainNav.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                mobileMenuToggle.textContent = '☰';
+            }
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        let lastScroll = 0;
+        const header = document.querySelector('.site-header');
+
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+
+
+<!-- Zappy Attribution Header Script -->
+<script>
+(function() {
+  var websiteId = '76adb0ef-c17e-44c5-8e09-c3cb16361aea';
+  
+  // Don't show header in preview mode
+  var currentUrl = window.location.href;
+  var isPreview = currentUrl.includes('/preview/') || 
+                  currentUrl.includes('/preview-fullscreen/') || 
+                  currentUrl.includes('localhost:5001') ||
+                  currentUrl.includes('localhost:3000');
+  
+  if (isPreview) {
+    return; // Exit early in preview mode
+  }
+  
+  fetch('https://api.zappy5.com/api/website/' + websiteId + '/tier')
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.showAttribution) {
+        var header = document.getElementById('zappy-attribution-header');
+        if (header) {
+          // Use dynamic announcement content if available
+          if (data.announcement && data.announcement.html) {
+            header.innerHTML = data.announcement.html;
+          }
+          // Apply fixed positioning styles inline (works for existing sites too)
+          header.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99999 !important; display: flex !important; justify-content: center !important; align-items: center !important; text-align: center !important; box-sizing: border-box !important;';
+          // Fix child elements that might have position: fixed from old CSS
+          var children = header.querySelectorAll('*');
+          for (var i = 0; i < children.length; i++) {
+            children[i].style.position = 'static';
+          }
+          // Get header height
+          var headerHeight = header.offsetHeight;
+          // Find and fix navbar to be fixed as well (prevents gap at top of page)
+          var navSelectors = ['nav', '.navbar', '.nav'];
+          var navbar = null;
+          for (var j = 0; j < navSelectors.length; j++) {
+            navbar = document.querySelector(navSelectors[j]);
+            if (navbar && navbar.id !== 'zappy-attribution-header') break;
+            navbar = null;
+          }
+          if (navbar) {
+            var navbarHeight = navbar.offsetHeight;
+            navbar.style.cssText += '; position: fixed !important; top: ' + headerHeight + 'px !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 99998 !important;';
+            document.body.style.paddingTop = (headerHeight + navbarHeight) + 'px';
+          } else {
+            document.body.style.paddingTop = headerHeight + 'px';
+          }
+        }
+      }
+    })
+    .catch(function(error) {
+      console.error('Failed to check tier:', error);
+    });
+})();
+</script>
+    <div data-integration="accessibility:toolbar"></div>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+    <script src="/script.js"></script>
+</body></html>

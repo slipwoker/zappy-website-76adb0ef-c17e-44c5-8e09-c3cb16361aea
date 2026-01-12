@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://studio-555-76adb0ef.zappy5.app/sitemap.xml
